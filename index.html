@@ -990,7 +990,7 @@ public class WeatherQuery {
         <div onclick="openAndCopyTextFile(this)" class="button">
             email-text
             <span>
-                
+
     // &lt;dependency&gt;
     //   &lt;groupId&gt;com.sun.mail&lt;/groupId&gt;
     //   &lt;artifactId&gt;jakarta.mail&lt;/artifactId&gt;
@@ -1367,7 +1367,7 @@ public class GetEmployeesInIT {
         }
     }
 }
-                
+
 ### **2. Get Employees Who Joined After 2016-01-01 and Work in HR (Criteria Query)**
 
 import org.hibernate.Session;
@@ -1478,6 +1478,352 @@ CREATE TABLE employee (
 
             </span>
         </div>
+
+        ||
+
+        <!--10.1-->
+        <div onclick="openAndCopyTextFile(this)" class="button">
+            json-stringExtractor
+            <span>
+                
+                &lt;!-- https://mvnrepository.com/artifact/org.json/json --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.json&lt;/groupId&gt;
+    &lt;artifactId&gt;json&lt;/artifactId&gt;
+    &lt;version&gt;20240303&lt;/version&gt;
+&lt;/dependency&gt;
+
+
+import org.json.JSONObject;
+
+public class JsonStringExtractor {
+    public static void main(String[] args) {
+        // Sample JSON string
+        String jsonString = "{ \"name\": \"John Doe\", \"age\": 30, \"email\": \"john.doe@example.com\" }";
+
+        // Parse JSON string into a JSONObject
+        JSONObject jsonObject = new JSONObject(jsonString);
+
+        // Extract and print the string values
+        String name = jsonObject.getString("name");
+        String email = jsonObject.getString("email");
+
+        System.out.println("Name: " + name);
+        System.out.println("Email: " +email);
+    }
+}
+            </span>
+        </div>
+        <!--10.2-->
+        <div onclick="openAndCopyTextFile(this)" class="button">
+            json-Str_param/jsp
+            <span>
+&lt;%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;JSON Input Display&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h2&gt;Enter JSON Data&lt;/h2&gt;
+    &lt;!-- Form to accept JSON string --&gt;
+    &lt;form method="post"&gt;
+        &lt;label for="jsonInput"&gt;JSON String:&lt;/label&gt;&lt;br&gt;
+        &lt;textarea id="jsonInput" name="jsonInput" rows="5" cols="50" required&gt;&lt;/textarea&gt;&lt;br&gt;&lt;br&gt;
+        &lt;input type="submit" value="Submit"&gt;
+    &lt;/form&gt;
+
+    &lt;hr&gt;
+
+    &lt;h3&gt;Parsed JSON Data&lt;/h3&gt;
+    &lt;div id="output"&gt;
+        &lt;% 
+        // Retrieve JSON string from the request
+        String jsonInput = request.getParameter("jsonInput");
+        if (jsonInput != null && !jsonInput.trim().isEmpty()) {
+            // Use JSON library (if needed, e.g., Gson or org.json) for advanced parsing in backend
+        %&gt;
+        &lt;!-- Display raw JSON --&gt;
+        &lt;p&gt;&lt;strong&gt;Raw JSON:&lt;/strong&gt; &lt;%= jsonInput %&gt;&lt;/p&gt;
+
+        &lt;script&gt;
+            // Parse JSON string using JavaScript
+            const jsonString = &lt;%= jsonInput.replace("\"", "\\\"") %&gt;;
+            try {
+                const jsonData = JSON.parse(jsonString);
+
+                // Display parsed JSON data
+                let htmlOutput = "&lt;ul&gt;";
+                for (const key in jsonData) {
+                    htmlOutput += &lt;li&gt;&lt;strong&gt;${key}:&lt;/strong&gt; ${jsonData[key]}&lt;/li&gt;;
+                }
+                htmlOutput += "&lt;/ul&gt;";
+                document.getElementById("output").innerHTML += htmlOutput;
+            } catch (e) {
+                document.getElementById("output").innerHTML += "&lt;p style='color:red;'&gt;Invalid JSON format!&lt;/p&gt;";
+            }
+        &lt;/script&gt;
+        &lt;% 
+        } else { 
+        %&gt;
+        &lt;p&gt;No JSON input provided yet.&lt;/p&gt;
+        &lt;% 
+        } 
+        %&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+            </span>
+        </div>
+
+        ||
+
+        <!--11.1-->
+        <div onclick="openAndCopyTextFile(this)" class="button">
+            spring-dep_injection
+            <span>
+
+### 1. **Project Setup**:
+
+Ensure you have the following dependencies in your `pom.xml`:
+
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+        &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+
+
+### 3. **Code Example**:
+
+#### `GreetingService.java` (Service Interface)
+package com.example.demo.service;
+
+public interface GreetingService {
+    String getGreeting();
+}
+
+
+#### `GreetingServiceImpl.java` (Service Implementation)
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class GreetingServiceImpl implements GreetingService {
+    @Override
+    public String getGreeting() {
+        return "Hello, welcome to Setter Dependency Injection!";
+    }
+}
+
+#### `GreetingController.java` (Controller)
+
+import com.example.demo.service.GreetingService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class GreetingController {
+
+    private GreetingService greetingService;
+
+    // Setter Dependency Injection
+    @Autowired
+    public void setGreetingService(GreetingService greetingService) {
+        this.greetingService = greetingService;
+    }
+
+    @GetMapping("/greet")
+    public String greet() {
+        return greetingService.getGreeting();
+    }
+}
+
+#### `DemoApplication.java` (Main Application)
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class DemoApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
+}
+
+### 4. **Run the Application**:
+
+//- Build and run the application:
+  //mvn spring-boot:run
+  
+ // - Open your browser or use a tool like Postman to access the API:
+  //http://localhost:8080/greet
+
+//You should receive the response:
+// Hello, welcome to Setter Dependency Injection!
+
+            </span>
+        </div>
+        <!--11.2-->
+        <div onclick="openAndCopyTextFile(this)" class="button">
+            spring-addNumber
+            <span>
+
+//### 1. **Project Setup**
+//Add the following dependencies to your `pom.xml`:
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+
+//### 2. **Code Implementation**
+//
+//#### `AdditionController.java`
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class AdditionController {
+
+    @GetMapping("/add")
+    public String addNumbers(
+            @RequestParam("num1") double num1,
+            @RequestParam("num2") double num2) {
+        double sum = num1 + num2;
+        return "The sum of " + num1 + " and " + num2 + " is " + sum;
+    }
+}
+
+//#### `DemoApplication.java`
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class DemoApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
+}
+
+//### 3. **Run the Application**
+//- Use the following Maven command to run the application:
+//  mvn spring-boot:run
+//
+//### 4. **API Usage**
+//Access the API endpoint with two numbers as query parameters:
+//
+//http://localhost:8080/add?num1=10&num2=20
+//
+//#### Response
+//The sum of 10.0 and 20.0 is 30.0
+//
+//### 5. **Explanation**
+//1. **Spring MVC Controller**:
+//   - `@RestController` indicates that this class handles REST API requests.
+//   - The `@GetMapping("/add")` annotation maps HTTP GET requests to the `addNumbers` method.
+//
+//2. **Query Parameters**:
+//   - The `@RequestParam` annotation binds query parameters (`num1` and `num2`) from the URL to the method arguments.
+//
+//3. **Addition Logic**:
+//   - The two numbers are added in the `addNumbers` method, and the result is returned as a plain string response.
+            </span>
+        </div>
+        <!--11.3-->
+        <div onclick="openAndCopyTextFile(this)" class="button">
+            spring-palindrome
+            <span>
+//### 1. **Maven Dependency**
+//Add the Spring Boot Web Starter dependency in your `pom.xml`:
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+
+//### 2. **Code Implementation**
+
+//#### `PalindromeController.java`
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class PalindromeController {
+
+    @GetMapping("/palindrome")
+    public String isPalindrome(@RequestParam("input") String input) {
+        // Remove spaces and convert to lowercase for uniformity
+        String processedInput = input.replaceAll("\\s+", "").toLowerCase();
+        String reversedInput = new StringBuilder(processedInput).reverse().toString();
+
+        if (processedInput.equals(reversedInput)) {
+            return "\"" + input + "\" is a palindrome.";
+        } else {
+            return "\"" + input + "\" is not a palindrome.";
+        }
+    }
+}
+
+//#### `DemoApplication.java`
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class DemoApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
+}
+
+//### 3. **Run the Application**
+//Run the application using the Maven command:
+//mvn spring-boot:run
+
+
+### 4. **API Usage**
+
+// #### Example Request
+// http://localhost:8080/palindrome?input=madam
+
+//#### Example Responses
+//
+//**For a Palindrome Input**:
+//"madam" is a palindrome.
+
+//**For a Non-Palindrome Input**:
+//"hello" is not a palindrome.
+
+//### 5. **Explanation**
+//
+//1. **Controller**:
+//   - The `@RestController` annotation indicates that the class handles REST API requests.
+//   - The `@GetMapping("/palindrome")` maps HTTP GET requests to the `isPalindrome` method.
+//
+//2. **Processing**:
+//   - The input string is sanitized by removing spaces and converting it to lowercase.
+//   - The string is reversed using `StringBuilder`'s `reverse` method.
+//   - A comparison is made between the original processed string and its reversed version to determine if it's a palindrome.
+//
+//3. **Query Parameter**:
+//   - The `@RequestParam("input")` annotation binds the query parameter `input` to the method argument.
+            </span>
+        </div>
+
     </div>
 </div>
 
